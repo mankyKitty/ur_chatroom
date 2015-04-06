@@ -32,20 +32,19 @@ end = struct
             lastSeen <- source (maxTimestamp initial);
 
             return <xml><body onload={List.app (fn r => Log.append log r.Text) initial}>
-<h1>Chat Room: {[title]}</h1>
+              <h1>Chat Room: {[title]}</h1>
 
-Add message: <ctextbox source={text}/>
-                                    <button value="Send" onclick={fn _ =>
-                                                                     txt <- get text;
-                                                                     set text "";
-                                                                     lastSn <- get lastSeen;
-                                                                     newMsgs <- rpc (say txt lastSn);
-                                                                     set lastSeen (maxTimestamp newMsgs);
-                                                                     List.app (fn r => Log.append log r.Text) newMsgs
-                                                                 }/>
-                                                                  <hr/>
-                                                                  {Log.render log}
-                                                                  </body></xml>
+              Add message: <ctextbox source={text}/>
+              <button value="Send" onclick={fn _ =>
+                                               txt <- get text;
+                                               set text "";
+                                               lastSn <- get lastSeen;
+                                               newMsgs <- rpc (say txt lastSn);
+                                               set lastSeen (maxTimestamp newMsgs);
+                                               List.app (fn r => Log.append log r.Text) newMsgs}/>
+              <hr/>
+              {Log.render log}
+              </body></xml>
         end
 
     val rooms = queryL1 (SELECT * FROM room ORDER BY room.Title)
@@ -53,8 +52,7 @@ end
 
 fun main () =
     rooms <- Room.rooms;
-    return
-        <xml><body>
-          <h1>List of Rooms</h1>
-          {List.mapX (fn r => <xml><li><a link={Room.chat r.Id}> {[r.Title]}</a></li></xml>) rooms}
-          </body></xml>
+    return <xml><body>
+      <h1>List of Rooms</h1>
+      {List.mapX (fn r => <xml><li><a link={Room.chat r.Id}> {[r.Title]}</a></li></xml>) rooms}
+      </body></xml>
